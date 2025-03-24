@@ -9,7 +9,7 @@ echo
 
 # Alle benötigten Pakete installieren
 echo "Alle benötigten Pakete werden installiert."
-apt install gnupg -y
+apt install gnupg unzip apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip -y
 echo
 
 # Webmin installieren
@@ -18,11 +18,6 @@ echo "deb https://download.webmin.com/download/repository sarge contrib" >> /etc
 wget -q https://download.webmin.com/jcameron-key.asc -O- | apt-key add -
 apt update
 apt install webmin -y
-echo
-
-# Pakete installieren
-echo "Pakete installieren"
-apt install apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip -y
 echo
 
 # PHP mehr Arbeitsspeicher zuweisen
