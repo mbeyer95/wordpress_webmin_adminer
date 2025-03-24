@@ -55,9 +55,11 @@ echo
 echo "Wordpress konfigurieren."
 cd /var/www/html/wordpress
 cp wp-config-sample.php wp-config.php
-wp config set DB_PASSWORD "$datenbankpw" --raw
-wp config set DB_NAME "wordpress" --raw
-wp config set DB_USER "wordpressuser" --raw
+sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" /var/www/html/wordpress/wp-config.php
+sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" /var/www/html/wordpress/wp-config.php
+sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$datenbankpw');/" /var/www/html/wordpress/wp-config.php
 echo "define('WP_MEMORY_LIMIT', '512M');" >> /var/www/html/wordpress/wp-config.php
+
+# Apache Virtual Host für WordPress einrichten
 
 
