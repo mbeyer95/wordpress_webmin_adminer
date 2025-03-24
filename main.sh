@@ -22,7 +22,7 @@ echo
 
 # PHP mehr Arbeitsspeicher zuweisen
 echo "PHP wird mehr Arbeitsspeicher zugewiesen."
-sed -i "s|memory_limit = 128M|memory_limit = 1024M|" /etc/php/8.1/apache2/php.ini
+sed -i "s|memory_limit = 128M|memory_limit = 512M|" /etc/php/8.1/apache2/php.ini
 
 # Datenbank erstellen
 echo "Datenbank wird erstellt."
@@ -58,5 +58,5 @@ cp wp-config-sample.php wp-config.php
 wp config set DB_PASSWORD "$datenbankpw" --raw
 wp config set DB_NAME "wordpress" --raw
 wp config set DB_USER "wordpressuser" --raw
-define('WP_MEMORY_LIMIT', '256M');
+define('WP_MEMORY_LIMIT', '512M');
 
