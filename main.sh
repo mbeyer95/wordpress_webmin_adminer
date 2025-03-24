@@ -20,6 +20,11 @@ apt update
 apt install webmin -y
 echo
 
+# Pakete installieren
+echo "Pakete installieren"
+apt install apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip -y
+echo
+
 # PHP mehr Arbeitsspeicher zuweisen
 echo "PHP wird mehr Arbeitsspeicher zugewiesen."
 sed -i "s|memory_limit = 128M|memory_limit = 1024M|" /etc/php/8.1/apache2/php.ini
