@@ -47,10 +47,16 @@ wget https://wordpress.org/latest.tar.gz
 tar -xzvf latest.tar.gz
 chown -R www-data:www-data /var/www/html/wordpress
 chmod -R 755 /var/www/html/wordpress
+rm -rf latest.tar.gz
+rm -rf index.html
 echo
 
 # Wordpress konfigurieren
 echo "Wordpress konfigurieren."
-wp-password=$(openssl rand -base64 16)
 cd /var/www/html/wordpress
 cp wp-config-sample.php wp-config.php
+wp config set DB_PASSWORD "$datenbankpw" --raw
+wp config set DB_NAME "wordpress" --raw
+wp config set DB_USER "wordpressuser" --raw
+define('WP_MEMORY_LIMIT', '256M');
+
