@@ -17,7 +17,7 @@ echo "Webmin wird installiert."
 echo "deb https://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
 wget -q https://download.webmin.com/jcameron-key.asc -O- | apt-key add -
 apt update
-apt install webmin
+apt install webmin -y
 echo
 
 # PHP mehr Arbeitsspeicher zuweisen
