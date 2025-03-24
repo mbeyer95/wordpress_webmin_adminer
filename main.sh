@@ -2,9 +2,9 @@
 
 # Updates installieren
 echo "Updates werden installiert."
-sudo apt update
-sudo apt upgrade -y
-sudo apt autoremove -y
+apt update
+apt upgrade -y
+apt autoremove -y
 echo
 
 # Alle benötigten Pakete installieren
@@ -23,3 +23,34 @@ echo
 # PHP mehr Arbeitsspeicher zuweisen
 echo "PHP wird mehr Arbeitsspeicher zugewiesen."
 sed -i "s|memory_limit = 128M|memory_limit = 1024M|" /etc/php/8.1/apache2/php.ini
+
+# Datenbank erstellen
+echo "Datenbank wird erstellt."
+mysql_root_pw=$(openssl rand -base64 16)
+datenbankname=wordpress
+datenbankuser=wordpressuser
+datenbankpw=$(openssl rand -base64 16)
+MYSQL_CMD="sudo mysql -u root -p${mysql_root_pw}"
+SQL_CMD="CREATE DATABASE \`${datenbankname}\`; GRANT ALL PRIVILEGES ON \`${datenbankname}\`.* TO '${datenbankuser}'@'localhost' IDENTIFIED BY '${datenbankpw}'; FLUSH PRIVILEGES;"
+echo $SQL_CMD | $MYSQL_CMD
+
+# Apache neustarten
+echo "Apache wird neugestartet."
+a2enmod rewrite
+systemctl restart apache2
+echo
+
+# Wordpress herunterladen und installieren.
+echo "Wordpress herunterladen und installieren."
+cd /var/www/html
+wget https://wordpress.org/latest.tar.gz
+tar -xzvf latest.tar.gz
+chown -R www-data:www-data /var/www/html/wordpress
+chmod -R 755 /var/www/html/wordpress
+echo
+
+# Wordpress konfigurieren
+echo "Wordpress konfigurieren."
+wp-password=$(openssl rand -base64 16)
+cd /var/www/html/wordpress
+cp wp-config-sample.php wp-config.php
