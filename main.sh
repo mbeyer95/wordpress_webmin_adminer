@@ -9,13 +9,15 @@ echo
 
 # Alle benötigten Pakete installieren
 echo "Alle benötigten Pakete werden installiert."
-apt install apache2 php php-gd sqlite php-sqlite3 php-curl php-zip php-xml php-mbstring php-imagick php7.4-intl libapache2-mod-php mariadb-server php-mysql libnet-ssleay-perl libauthen-pam-perl libio-pty-perl apt-show-versions net-tools unzip -y
+apt install gnupg -y
 echo
 
 # Webmin installieren
 echo "Webmin wird installiert."
-wget https://sourceforge.net/projects/webadmin/files/webmin/2.303/newkey-webmin_2.303_all.deb
-dpkg -i webmin_2.013_all.deb
+echo "deb https://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
+wget -q https://download.webmin.com/jcameron-key.asc -O- | apt-key add -
+apt update
+apt install webmin
 echo
 
 # PHP mehr Arbeitsspeicher zuweisen
