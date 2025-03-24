@@ -58,5 +58,6 @@ cp wp-config-sample.php wp-config.php
 wp config set DB_PASSWORD "$datenbankpw" --raw
 wp config set DB_NAME "wordpress" --raw
 wp config set DB_USER "wordpressuser" --raw
-define('WP_MEMORY_LIMIT', '512M');
+echo "define('WP_MEMORY_LIMIT', '512M');" >> /var/www/html/wordpress/wp-config.php
+
 
