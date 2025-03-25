@@ -70,6 +70,12 @@ sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/"
 sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" wp-config.php
 echo
 
+# Memory Limit erhöhen
+echo "" >> /var/www/html/wp-config.php
+echo "" >> /var/www/html/wp-config.php
+echo "/* WordPress Memory Limit */" >> /var/www/html/wp-config.php
+echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
+
 # Apache Virtual Host für WordPress einrichten
 echo "Apache Virtual Host für WordPress einrichten"
 DOCUMENT_ROOT="/var/www/html"
