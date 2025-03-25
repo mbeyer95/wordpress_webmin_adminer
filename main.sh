@@ -30,9 +30,15 @@ MYSQL_ROOT_PW=$(openssl rand -base64 16)
 DATENBANKNAME=wordpress
 DATENBANKUSER=wordpressuser
 DATENBANKPW=$(openssl rand -base64 16)
-MYSQL_CMD="sudo mysql -u root -p${MYSQL_ROOT_PW}"
-SQL_CMD="CREATE DATABASE \`${DATENBANKNAME}\`; GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost' IDENTIFIED BY '${DATENBANKPW}'; FLUSH PRIVILEGES;"
-echo $SQL_CMD | $MYSQL_CMD
+# MySQL sicher einrichten und Root-Passwort setzen
+sudo mysql <<EOF
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PW}';
+FLUSH PRIVILEGES;
+CREATE DATABASE \`${DATENBANKNAME}\`;
+CREATE USER '${DATENBANKUSER}'@'localhost' IDENTIFIED BY '${DATENBANKPW}';
+GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost';
+FLUSH PRIVILEGES;
+EOF
 
 # Apache neustarten
 echo "Apache wird neugestartet."
@@ -101,6 +107,7 @@ systemctl restart apache2
 echo
 
 # Infos anzeigen
+echo -e "Domain: www.$DOMAIN"
 echo -e "MYSQL/MariaDB Root Passwort: \e[35m$MYSQL_ROOT_PW\e[0m"
 echo -e "Datenbank-Benutzer: \e[35m$DATENBANKUSER\e[0m"
 echo -e "Datenbank-Passwort: \e[35m$DATENBANKPW\e[0m"
