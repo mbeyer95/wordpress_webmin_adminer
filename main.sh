@@ -99,13 +99,27 @@ cat > $CONF_FILE << EOF
 <VirtualHost *:80>
     ServerAdmin $EMAIL
     DocumentRoot $DOCUMENT_ROOT
-    ServerName $DOMAIN
-    ServerAlias www.$DOMAIN
-
+    ServerName $SERVER_IP
+    
+    # Proxy-Header verarbeiten
+    ProxyPreserveHost On
+    RequestHeader set X-Forwarded-Proto "https" env=HTTPS
+    RequestHeader set X-Forwarded-SSL "on" env=HTTPS
+    
+    # Vertrauenswürdige Proxies
+    RemoteIPHeader X-Forwarded-For
+    
     <Directory $DOCUMENT_ROOT>
         Options FollowSymLinks
         AllowOverride All
         Require all granted
+        
+        # Zusätzliche Proxy-Einstellungen
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteCond %{HTTP:X-Forwarded-Proto} =https
+            RewriteRule .* - [E=HTTPS:on,E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+        </IfModule>
     </Directory>
 
     ErrorLog \${APACHE_LOG_DIR}/error.log
