@@ -148,18 +148,6 @@ a2enconf adminer
 systemctl restart apache2
 echo
 
-# WP CLI Installation Installation
-echo "WP CLI Installation"
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-mv wp-cli.phar /usr/local/bin/wp
-
-# URL in der Datenbank anpassen
-echo "URL in der Datenbank anpassen"
-cd /var/www/html/
-sudo -u www-data -- wp option update home "https://$DOMAIN"
-sudo -u www-data -- wp option update siteurl "https://$DOMAIN"
-
 # Infos anzeigen
 echo -e "\e[32m=== Installation abgeschlossen ===\e[0m"
 echo -e "URL: \e[35mhttps://${DOMAIN}\e[0m"
