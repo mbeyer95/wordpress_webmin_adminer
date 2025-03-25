@@ -40,10 +40,14 @@ GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost'
 FLUSH PRIVILEGES;
 EOF
 
-# Apache neustarten
-echo "Apache wird neugestartet."
+# Apache neustarten und Proxy Unterstützung aktivieren
+echo "Apache wird neugestartet und Proxy Modul wird aktiviert"
 a2enmod rewrite
+a2enmod proxy
+a2enmod proxy_http
+a2enmod headers
 systemctl restart apache2
+echo
 echo
 
 # Wordpress herunterladen und installieren.
@@ -75,6 +79,17 @@ echo "" >> /var/www/html/wp-config.php
 echo "" >> /var/www/html/wp-config.php
 echo "/* WordPress Memory Limit */" >> /var/www/html/wp-config.php
 echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
+
+# Proxy-Einstellungen für WordPress hinzufügen
+echo "" >> /var/www/html/wp-config.php
+echo "/* Proxy-Einstellungen */" >> /var/www/html/wp-config.php
+echo "define('WP_HOME', 'https://$DOMAIN') ;" >> /var/www/html/wp-config.php
+echo "define('WP_SITEURL', 'https://$DOMAIN') ;" >> /var/www/html/wp-config.php
+echo "if (strpos(\$_SERVER['HTTP_X_FORWARDED_PROTO'], 'https')  !== false)" >> /var/www/html/wp-config.php
+echo "    \$_SERVER['HTTPS'] = 'on';" >> /var/www/html/wp-config.php
+echo "" >> /var/www/html/wp-config.php
+echo "/* Vertrauenswürdige Proxy-Einstellungen */" >> /var/www/html/wp-config.php
+echo "define('FORCE_SSL_ADMIN', true);" >> /var/www/html/wp-config.php
 
 # Apache Virtual Host für WordPress einrichten
 echo "Apache Virtual Host für WordPress einrichten"
