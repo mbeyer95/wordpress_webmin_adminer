@@ -29,11 +29,10 @@ echo "Datenbank wird erstellt"
 MYSQL_ROOT_PW=$(openssl rand -base64 16)
 DATENBANKNAME=wordpress
 DATENBANKUSER=wordpressuser
-DATENBANKPW=$(openssl rand -base64 16 | tr -d '\n')
-# MySQL Root-Passwort setzen (falls noch nicht gesetzt)
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PW}'; FLUSH PRIVILEGES;"
-# Datenbank erstellen
-mysql -u root -p${MYSQL_ROOT_PW} -e "CREATE DATABASE \`${DATENBANKNAME}\`; GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost' IDENTIFIED BY '${DATENBANKPW}'; FLUSH PRIVILEGES;"
+DATENBANKPW=$(openssl rand -base64 16)
+MYSQL_CMD="sudo mysql -u root -p${MYSQL_ROOT_PW}"
+SQL_CMD="CREATE DATABASE \`${DATENBANKNAME}\`; GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost' IDENTIFIED BY '${DATENBANKPW}'; FLUSH PRIVILEGES;"
+echo $SQL_CMD | $MYSQL_CMD
 
 # Apache neustarten
 echo "Apache wird neugestartet."
@@ -58,11 +57,11 @@ echo
 echo "Wordpress konfigurieren"
 cd /var/www/html
 cp wp-config-sample.php wp-config.php
-ESCAPED_PW=$(printf '%s\n' "$DATENBANKPW" | sed -e 's/[\/&]/\\&/g')
-sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', '${DATENBANKNAME}');/" wp-config.php
-sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', '${DATENBANKUSER}');/" wp-config.php
-sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '${ESCAPED_PW}');/" wp-config.php
-echo "define('WP_MEMORY_LIMIT', '256M');" >> wp-config.php
+sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" /var/www/html/wp-config.php
+sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" /var/www/html/wp-config.php
+sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" /var/www/html/wp-config.php
+echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
+echo
 
 # Apache Virtual Host für WordPress einrichten
 echo "Apache Virtual Host für WordPress einrichten"
@@ -102,7 +101,7 @@ systemctl restart apache2
 echo
 
 # Infos anzeigen
-echo -e "MYSQL/MariaDB Root Passwort: \e[35m${MYSQL_ROOT_PW}\e[0m"
+echo -e "MYSQL/MariaDB Root Passwort: \e[35m$MYSQL_ROOT_PW\e[0m"
 echo -e "Datenbank-Benutzer: \e[35m$DATENBANKUSER\e[0m"
 echo -e "Datenbank-Passwort: \e[35m$ESCAPED_PW\e[0m"
 echo -e "Datenbank-Name: \e[35m$DATENBANKNAME\e[0m"
