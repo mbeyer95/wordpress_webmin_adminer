@@ -9,7 +9,7 @@ echo
 
 # Alle benötigten Pakete installieren
 echo "Alle benötigten Pakete werden installiert"
-apt install gnupg unzip apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip -y
+apt install gnupg unzip apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip curl -y
 echo
 
 # Webmin installieren
@@ -147,6 +147,18 @@ apt install adminer -y
 a2enconf adminer
 systemctl restart apache2
 echo
+
+# WP CLI Installation Installation
+echo "WP CLI Installation"
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+# URL in der Datenbank anpassen
+echo "URL in der Datenbank anpassen"
+cd /var/www/html/
+sudo -u www-data -- wp option update home "https://${DOMAIN}"
+sudo -u www-data -- wp option update siteurl "https://${DOMAIN}"
 
 # Infos anzeigen
 echo -e "\e[32m=== Installation abgeschlossen ===\e[0m"
