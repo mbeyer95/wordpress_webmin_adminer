@@ -26,10 +26,10 @@ sed -i "s|memory_limit = 128M|memory_limit = 512M|" /etc/php/8.1/apache2/php.ini
 
 # Datenbank erstellen
 echo "Datenbank wird erstellt"
-MYSQL_ROOT_PW=$(openssl rand -base64 16)
+MYSQL_ROOT_PW=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9!%^*_+-')
 DATENBANKNAME=wordpress
 DATENBANKUSER=wordpressuser
-DATENBANKPW=$(openssl rand -base64 16)
+DATENBANKPW=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9!%^*_+-')
 # MySQL sicher einrichten und Root-Passwort setzen
 sudo mysql <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PW}';
