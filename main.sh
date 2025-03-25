@@ -93,5 +93,12 @@ systemctl restart apache2
 echo
 
 # Adminer installieren
+echo "Adminer installieren"
+apt install adminer -y
+a2enconf adminer
+a2enconf php*-fpm
+systemctl restart apache2
+echo
+
 
 
