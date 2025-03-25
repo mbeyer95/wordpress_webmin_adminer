@@ -157,8 +157,8 @@ mv wp-cli.phar /usr/local/bin/wp
 # URL in der Datenbank anpassen
 echo "URL in der Datenbank anpassen"
 cd /var/www/html/
-sudo -u www-data -- wp option update home "https://${DOMAIN}"
-sudo -u www-data -- wp option update siteurl "https://${DOMAIN}"
+sudo -u www-data -- wp option update home "https://$DOMAIN"
+sudo -u www-data -- wp option update siteurl "https://$DOMAIN"
 
 # Infos anzeigen
 echo -e "\e[32m=== Installation abgeschlossen ===\e[0m"
