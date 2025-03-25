@@ -58,7 +58,7 @@ chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 rm -rf latest.tar.gz
 rm -rf index.html
-rmdir wordpress 2>/dev/null || true
+rmdir wordpress
 echo
 
 # Wordpress konfigurieren
@@ -78,8 +78,8 @@ cat >> wp-config.php << 'EOF'
 
 /* Erweiterte WordPress-Einstellungen */
 define('WP_MEMORY_LIMIT', '256M') ;
-define('WP_HOME', 'https://${DOMAIN}.com') ;
-define('WP_SITEURL', 'https://${DOMAIN}.com') ;
+define('WP_HOME', "https://${DOMAIN}");
+define('WP_SITEURL', "https://${DOMAIN}");
 define('FORCE_SSL_ADMIN', true);
 
 /* Proxy-Einstellungen */
@@ -92,10 +92,6 @@ if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PR
 if (isset(\$_SERVER['HTTP_X_FORWARDED_HOST'])) {
     \$_SERVER['HTTP_HOST'] = \$_SERVER['HTTP_X_FORWARDED_HOST'];
 }
-
-define('WP_DEBUG', false);
-define('WP_DEBUG_LOG', false);
-define('WP_DEBUG_DISPLAY', false);
 EOF
 
 # WordPress Salts hinzufügen
