@@ -30,7 +30,7 @@ MYSQL_ROOT_PW=$(openssl rand -base64 16)
 DATENBANKNAME=wordpress
 DATENBANKUSER=wordpressuser
 DATENBANKPW=$(openssl rand -base64 16)
-MYSQL_CMD="sudo mysql -u root -p${mysql_root_pw}"
+MYSQL_CMD="sudo mysql -u root -p${MYSQL_ROOT_PW}"
 SQL_CMD="CREATE DATABASE \`${DATENBANKNAME}\`; GRANT ALL PRIVILEGES ON \`${DATENBANKNAME}\`.* TO '${DATENBANKUSER}'@'localhost' IDENTIFIED BY '${DATENBANKPW}'; FLUSH PRIVILEGES;"
 echo $SQL_CMD | $MYSQL_CMD
 
