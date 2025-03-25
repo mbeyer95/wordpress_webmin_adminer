@@ -84,14 +84,15 @@ define('FORCE_SSL_ADMIN', true);
 
 /* Proxy-Einstellungen */
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    \$_SERVER['HTTPS'] = 'on';
-    \$_SERVER['SERVER_PORT'] = 443;
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = 443;
 }
 
 /* Zusätzliche Proxy-Einstellungen */
-if (isset(\$_SERVER['HTTP_X_FORWARDED_HOST'])) {
-    \$_SERVER['HTTP_HOST'] = \$_SERVER['HTTP_X_FORWARDED_HOST'];
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
 }
+
 EOF
 
 # WordPress Salts hinzufügen
