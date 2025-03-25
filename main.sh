@@ -45,27 +45,29 @@ echo "Wordpress herunterladen und installieren"
 cd /var/www/html
 wget https://wordpress.org/latest.tar.gz
 tar -xzvf latest.tar.gz
-chown -R www-data:www-data /var/www/html/wordpress
-chmod -R 755 /var/www/html/wordpress
+mv /var/www/html/wordpress/* /var/www/html
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
 rm -rf latest.tar.gz
 rm -rf index.html
+rmdir wordpress
 echo
 
 # Wordpress konfigurieren
 echo "Wordpress konfigurieren"
-cd /var/www/html/wordpress
+cd /var/www/html
 cp wp-config-sample.php wp-config.php
-sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" /var/www/html/wordpress/wp-config.php
-sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" /var/www/html/wordpress/wp-config.php
-sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" /var/www/html/wordpress/wp-config.php
-echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wordpress/wp-config.php
+sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" /var/www/html/wp-config.php
+sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" /var/www/html/wp-config.php
+sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" /var/www/html/wp-config.php
+echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
 echo
 
 # Apache Virtual Host für WordPress einrichten
 echo "Apache Virtual Host für WordPress einrichten"
 read -p "Bitte geben Sie Ihre öffentliche Domain ein (example.com): " DOMAIN
 read -p "Bitte geben Sie Ihre E-Mail ein (example@mail.com): " EMAIL
-DOCUMENT_ROOT="/var/www/html/wordpress"
+DOCUMENT_ROOT="/var/www/html"
 CONF_FILE="/etc/apache2/sites-available/wordpress.conf"
 cat > $CONF_FILE << EOF
 <VirtualHost *:80>
