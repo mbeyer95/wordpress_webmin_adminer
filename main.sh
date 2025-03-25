@@ -61,18 +61,32 @@ echo
 
 # Wordpress konfigurieren
 echo "Wordpress konfigurieren"
+read -p "Bitte geben Sie Ihre öffentliche Domain ein (example.com): " DOMAIN
+read -p "Bitte geben Sie Ihre E-Mail ein (example@mail.com): " EMAIL
 cd /var/www/html
 cp wp-config-sample.php wp-config.php
-sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" /var/www/html/wp-config.php
-sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" /var/www/html/wp-config.php
-sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" /var/www/html/wp-config.php
-echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
+
+# Datenbank-Einstellungen
+sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" wp-config.php
+sed -i "s/define( *'DB_USER', *'[^']*' *);/define('DB_USER', 'wordpressuser');/" wp-config.php
+sed -i "s/define( *'DB_PASSWORD', *'[^']*' *);/define('DB_PASSWORD', '$DATENBANKPW');/" wp-config.php
+
+# SSL und andere Einstellungen
+sed -i "/\/\* Add any custom values between this line and the \"stop editing\" line\. \*\//,/\/\* That's all, stop editing! Happy publishing\. \*\// {
+    /\/\* That's all/d
+    a\\
+define('FORCE_SSL_ADMIN', true);\\
+\$_SERVER['HTTPS'] = 'on';\\
+define('WP_HOME', 'https://${DOMAIN}');\\
+define('WP_SITEURL', 'https://${DOMAIN}');\\
+define('WP_MEMORY_LIMIT', '256M');\\
+/* That's all, stop editing! Happy publishing. */
+    /\/\* Add any custom values/d
+}" wp-config.php
 echo
 
 # Apache Virtual Host für WordPress einrichten
 echo "Apache Virtual Host für WordPress einrichten"
-read -p "Bitte geben Sie Ihre öffentliche Domain ein (example.com): " DOMAIN
-read -p "Bitte geben Sie Ihre E-Mail ein (example@mail.com): " EMAIL
 DOCUMENT_ROOT="/var/www/html"
 CONF_FILE="/etc/apache2/sites-available/wordpress.conf"
 cat > $CONF_FILE << EOF
