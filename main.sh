@@ -103,5 +103,5 @@ echo
 # Infos anzeigen
 echo -e "MYSQL/MariaDB Root Passwort: \e[35m$MYSQL_ROOT_PW\e[0m"
 echo -e "Datenbank-Benutzer: \e[35m$DATENBANKUSER\e[0m"
-echo -e "Datenbank-Passwort: \e[35m$ESCAPED_PW\e[0m"
+echo -e "Datenbank-Passwort: \e[35m$DATENBANKPW\e[0m"
 echo -e "Datenbank-Name: \e[35m$DATENBANKNAME\e[0m"
