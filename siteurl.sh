@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 # WP CLI Installation Installation
 echo "WP CLI Installation"
