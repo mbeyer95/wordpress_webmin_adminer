@@ -104,7 +104,7 @@ cat > /etc/apache2/sites-available/wordpress.conf << EOF
 <VirtualHost *:80>
     ServerAdmin ${EMAIL}
     DocumentRoot /var/www/html
-    ServerName ${SERVER_IP}
+    ServerName ${DOMAIN}
     ServerAlias ${DOMAIN} www.${DOMAIN}
 
     # Proxy-Einstellungen
