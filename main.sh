@@ -67,6 +67,7 @@ echo
 echo "Wordpress konfigurieren"
 read -p "Bitte geben Sie Ihre öffentliche Domain ein (example.com): " DOMAIN
 read -p "Bitte geben Sie Ihre E-Mail ein (example@mail.com): " EMAIL
+SERVER_IP=$(ip -o -4 addr show scope global | awk '{print $4}' | cut -d'/' -f1)
 cd /var/www/html
 cp wp-config-sample.php wp-config.php
 sed -i "s/define( *'DB_NAME', *'[^']*' *);/define('DB_NAME', 'wordpress');/" wp-config.php
@@ -141,7 +142,8 @@ systemctl restart apache2
 echo
 
 # Infos anzeigen
-echo -e "Domain: www.$DOMAIN"
+echo -e "Externe Domain: www.$DOMAIN"
+echo -e "Interne Server-IP: $SERVER_IP"  # NEU
 echo -e "MYSQL/MariaDB Root Passwort: \e[35m$MYSQL_ROOT_PW\e[0m"
 echo -e "Datenbank-Benutzer: \e[35m$DATENBANKUSER\e[0m"
 echo -e "Datenbank-Passwort: \e[35m$DATENBANKPW\e[0m"
