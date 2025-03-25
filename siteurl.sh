@@ -10,5 +10,6 @@ mv wp-cli.phar /usr/local/bin/wp
 echo "URL in der Datenbank anpassen"
 read -p "Öffentliche Domain (example.com): " DOMAIN
 cd /var/www/html/
-sudo -u www-data -- wp option update home "https://$DOMAIN"
-sudo -u www-data -- wp option update siteurl "https://$DOMAIN"
+sudo -u www-data -- bash -c "wp option update home 'https://$DOMAIN'"
+sudo -u www-data -- bash -c "wp option update siteurl 'https://$DOMAIN'"
+
