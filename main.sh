@@ -58,7 +58,7 @@ chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 rm -rf latest.tar.gz
 rm -rf index.html
-rmdir wordpress
+rmdir wordpress 2>/dev/null || true
 echo
 
 # Wordpress konfigurieren
@@ -66,6 +66,7 @@ echo "Wordpress konfigurieren"
 read -p "Öffentliche Domain (example.com): " DOMAIN
 read -p "E-Mail Adresse für den Admin: " EMAIL
 read -p "IP/Subnetz des Reverse-Proxy (z.B. 10.0.0.1/24): " PROXY_IP
+SERVER_IP=$(hostname -I | awk '{print $1}')
 
 cp wp-config-sample.php wp-config.php
 sed -i "s/database_name_here/${DATENBANKNAME}/" wp-config.php
@@ -76,18 +77,22 @@ sed -i "s/password_here/${DATENBANKPW}/" wp-config.php
 cat >> wp-config.php << 'EOF'
 
 /* Erweiterte WordPress-Einstellungen */
-define('WP_MEMORY_LIMIT', '256M');
-define('WP_HOME', 'https://' . $_SERVER['HTTP_HOST']);
-define('WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST']);
+define('WP_MEMORY_LIMIT', '256M') ;
+define('WP_HOME', 'https://${DOMAIN}.com') ;
+define('WP_SITEURL', 'https://${DOMAIN}.com') ;
 define('FORCE_SSL_ADMIN', true);
 
 /* Proxy-Einstellungen */
-if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    $_SERVER['HTTPS'] = 'on';
-    $_SERVER['SERVER_PORT'] = 443;
+if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    \$_SERVER['HTTPS'] = 'on';
+    \$_SERVER['SERVER_PORT'] = 443;
 }
 
-/* Debugging (nur für Entwicklung) */
+/* Zusätzliche Proxy-Einstellungen */
+if (isset(\$_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    \$_SERVER['HTTP_HOST'] = \$_SERVER['HTTP_X_FORWARDED_HOST'];
+}
+
 define('WP_DEBUG', false);
 define('WP_DEBUG_LOG', false);
 define('WP_DEBUG_DISPLAY', false);
@@ -102,8 +107,8 @@ cat > /etc/apache2/sites-available/wordpress.conf << EOF
 <VirtualHost *:80>
     ServerAdmin ${EMAIL}
     DocumentRoot /var/www/html
-    ServerName ${DOMAIN}
-    ServerAlias www.${DOMAIN}
+    ServerName ${SERVER_IP}
+    ServerAlias ${DOMAIN} www.${DOMAIN}
 
     # Proxy-Einstellungen
     ProxyPreserveHost On
@@ -111,13 +116,21 @@ cat > /etc/apache2/sites-available/wordpress.conf << EOF
     RemoteIPInternalProxy ${PROXY_IP}
 
     # Header für HTTPS
-    RequestHeader set X-Forwarded-Proto "https"
-    RequestHeader set X-Forwarded-Port "443"
+    <IfModule mod_headers.c>
+        RequestHeader set X-Forwarded-Proto "https" env=HTTPS
+    </IfModule>
 
     <Directory /var/www/html>
         Options FollowSymLinks
         AllowOverride All
         Require all granted
+        
+        # Zusätzliche Rewrite-Regeln für Proxy
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteCond %{HTTP:X-Forwarded-Proto} =https
+            RewriteRule .* - [E=HTTPS:on,E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+        </IfModule>
     </Directory>
 
     ErrorLog \${APACHE_LOG_DIR}/error.log
@@ -140,12 +153,9 @@ echo
 
 # Infos anzeigen
 echo -e "\e[32m=== Installation abgeschlossen ===\e[0m"
-echo -e "\n\e[36mWordPress Zugangsdaten:\e[0m"
 echo -e "URL: \e[35mhttps://${DOMAIN}\e[0m"
 echo -e "Interne IP: \e[35m$(hostname -I | awk '{print $1}')\e[0m"
 echo -e "MYSQL/MariaDB Root Passwort: \e[35m$MYSQL_ROOT_PW\e[0m"
 echo -e "Datenbank-Benutzer: \e[35m$DATENBANKUSER\e[0m"
 echo -e "Datenbank-Passwort: \e[35m$DATENBANKPW\e[0m"
 echo -e "Datenbank-Name: \e[35m$DATENBANKNAME\e[0m"
-echo -e "\n\e[33mTestbefehl für Proxy-Kommunikation:\e[0m"
-echo -e "curl -I http://localhost -H 'Host: ${DOMAIN}' -H 'X-Forwarded-Proto: https'"
