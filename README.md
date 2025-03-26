@@ -15,7 +15,7 @@
 
 <h2>Nachbereitung</h2>
 <ol start="3">
-  <li>Notieren und sichern Sie alle wichtigen Informationen, die während der Installation angezeigt werden.</li>
+  <li>Notieren und sichern Sie alle Informationen, die am Ende der Installation angezeigt werden.</li>
 </ol>
 
 <p>Diese optimierte Installationsmethode ermöglicht eine sichere und effiziente Einrichtung von WordPress mit zusätzlichen Verwaltungstools in einer containerisierten Umgebung.</p>
