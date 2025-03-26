@@ -10,7 +10,7 @@ Diese Anleitung beschreibt die Installation von WordPress, Webmin und Adminer in
         <br>
     3. Die interne IP Adresse im Browser eingeben und die WordPress Installation durchführen
         <br><br>
-    4. Zum Schluss das Script siteurl ausführen zum Anpassen der WordPress URL in der Datenbank<br>
+    4. Zum Schluss das Script zum Anpassen der WordPress URL in der Datenbank ausführen<br>
         Führen Sie siteurl.sh mit sudo aus:<br>
         sudo ./siteurl.sh<br>
         <br>
