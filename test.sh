@@ -1,19 +1,25 @@
 #!/bin/bash
 
+# Farbdefinitionen für Ausgaben
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m'
+
 # Updates installieren
-echo "Updates werden installiert"
+echo -e "${BLUE}Updates werden installiert${NC}"
 apt update
 apt upgrade -y
 apt autoremove -y
 echo
 
 # Alle benötigten Pakete installieren
-echo "Alle benötigten Pakete werden installiert"
+echo -e "${BLUE}Alle benötigten Pakete werden installiert${NC}"
 apt install gnupg unzip apache2 mysql-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip curl -y
 echo
 
 # Webmin installieren
-echo "Webmin wird installiert"
+echo -e "${BLUE}Webmin wird installiert${NC}"
 echo "deb https://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
 wget -q https://download.webmin.com/jcameron-key.asc -O- | apt-key add -
 apt update
@@ -21,12 +27,12 @@ apt install webmin -y
 echo
 
 # PHP mehr Arbeitsspeicher zuweisen
-echo "PHP wird mehr Arbeitsspeicher zugewiesen"
+echo -e "${BLUE}PHP wird mehr Arbeitsspeicher zugewiesen${NC}"
 PHP_VERSION=$(php -v | head -n1 | cut -d' ' -f2 | cut -d'.' -f1-2)
 sed -i "s|memory_limit = 128M|memory_limit = 512M|" /etc/php/${PHP_VERSION}/apache2/php.ini
 
 # Datenbank erstellen
-echo "Datenbank wird erstellt"
+echo -e "${BLUE}Datenbank wird erstellt${NC}"
 MYSQL_ROOT_PW=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9!%^*_+-')
 DATENBANKNAME=wordpress
 DATENBANKUSER=wordpressuser
@@ -42,13 +48,13 @@ FLUSH PRIVILEGES;
 EOF
 
 # Apache neustarten und Proxy Unterstützung aktivieren
-echo "Apache wird konfiguriert"
+echo -e "${BLUE}Apache wird konfiguriert${NC}"
 a2enmod rewrite proxy proxy_http headers remoteip
 systemctl restart apache2
 echo
 
 # Wordpress herunterladen und installieren.
-echo "Wordpress herunterladen und installieren"
+echo -e "${BLUE}Wordpress herunterladen und installieren${NC}"
 cd /var/www/html
 rm -rf *
 wget https://wordpress.org/latest.tar.gz
@@ -62,7 +68,7 @@ rmdir wordpress
 echo
 
 # Wordpress konfigurieren
-echo "Wordpress konfigurieren"
+echo -e "${BLUE}Wordpress wird konfiguriert${NC}"
 read -p "Öffentliche Domain (example.com): " DOMAIN
 read -p "E-Mail Adresse für den Admin: " EMAIL
 read -p "IP/Subnetz des Reverse-Proxy (z.B. 10.0.0.1/24): " PROXY_IP
@@ -99,7 +105,7 @@ EOF
 wget -q -O - https://api.wordpress.org/secret-key/1.1/salt/ >> wp-config.php
 
 # Apache Virtual Host einrichten
-echo "Apache Virtual Host wird konfiguriert"
+echo -e "${BLUE}Apache Virtual Host wird konfiguriert${NC}"
 cat > /etc/apache2/sites-available/wordpress.conf << EOF
 <VirtualHost *:80>
     ServerAdmin ${EMAIL}
@@ -142,22 +148,14 @@ systemctl restart apache2
 echo
 
 # Adminer installieren
-echo "Adminer installieren"
+echo -e "${BLUE}Adminer wird installiert${NC}"
 apt install adminer -y
 a2enconf adminer
 systemctl restart apache2
 echo
 
-#!/bin/bash
-
 # WordPress Automatische Installation Script
 # Dieses Script automatisiert die WordPress-Installation, die normalerweise im Browser erfolgt
-
-# Farbdefinitionen für Ausgaben
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
 
 # Funktion zum Anzeigen von Fehlermeldungen und Beenden des Scripts
 function error_exit {
