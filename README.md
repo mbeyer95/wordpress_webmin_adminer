@@ -1,9 +1,1 @@
-# WordPress Installation mit Webmin und Adminer
-
-Hierbei handelt es sich um die Installation von WordPress mit Webmin und Adminer. Die Installation ist für einen LXC Container mit Ubuntu 22. Bei der Installation handelt es sich um eine WordPress Installation hinter einem Nginx Reverse Proxy.<br><br>
-    1. LXC Container mit Ubuntu 22 aufsetzen.<br><br>
-    2. In Nginx Reverse Proxy Manager die externe URL mit der IP vom neu erstellten LXC Containter eintragen und mit SSL Verschlüsseln. Die interne IP wird auf Port 80 freigegeben und Scheme ist HTTP.<br><br>    
-    3. Ausführen des Hauptskripts mit sudo ./main.sh im neu erstellten LXC Container<br><br>
-    4. Am Ende der Installation alle Informationen aufschreiben und sichern.<br><br>
-
 <h1>WordPress-Installation mit Webmin und Adminer in einem LXC-Container</h1> <p>Diese Anleitung beschreibt die Installation von WordPress mit Webmin und Adminer in einem LXC-Container unter Ubuntu 22.04. Die WordPress-Instanz wird hinter einem Nginx Reverse Proxy betrieben.</p> <h2>Vorbereitungen</h2> <ol> <li>Erstellen Sie einen LXC-Container mit Ubuntu 22.04.</li> <li>Konfigurieren Sie den Nginx Reverse Proxy Manager: <ul> <li>Tragen Sie die externe URL ein und verknüpfen Sie sie mit der IP-Adresse des neuen LXC-Containers.</li> <li>Aktivieren Sie die SSL-Verschlüsselung für die externe URL.</li> <li>Geben Sie den internen Port 80 frei.</li> <li>Setzen Sie das Scheme auf HTTP.</li> </ul> </li> </ol> <h2>Installation</h2> <ol start="3"> <li>Führen Sie das Hauptskript im neu erstellten LXC-Container aus: <pre><code>sudo ./main.sh</code></pre> </li> </ol> <h2>Nachbereitung</h2> <ol start="4"> <li>Notieren und sichern Sie alle wichtigen Informationen, die während der Installation angezeigt werden.</li> </ol> <p>Diese optimierte Installationsmethode ermöglicht eine sichere und effiziente Einrichtung von WordPress mit zusätzlichen Verwaltungstools in einer containerisierten Umgebung.</p>
