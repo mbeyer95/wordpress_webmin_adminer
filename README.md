@@ -1,5 +1,5 @@
 <h1>WordPress-Installation mit Webmin und Adminer in einem LXC-Container</h1>
-<p>Diese Anleitung beschreibt die Installation von WordPress, Webmin und Adminer in einem LXC-Container unter Ubuntu 22.04. Die WordPress-Instanz wird hinter einem Nginx Reverse Proxy betrieben.</p>
+<p>Diese Anleitung beschreibt die Installation von WordPress, Webmin und Adminer in einem LXC-Container unter Ubuntu 22.04. Während der Einrichtung wird nach einer öffentlichen Domain sowie Proxy-Einstellungen gefragt, da die WordPress-Instanz gemäß dieser Anleitung hinter einem Proxy betrieben wird.</p>
 
 <h2>Vorbereitungen</h2>
 <ol>
